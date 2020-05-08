@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using WebsiteManagement.Application.Common;
-using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Queries.GetWebsites;
 using WebsiteManagement.Domain;
@@ -24,19 +25,19 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
             SeedWebsites();
 
             IServiceScope scope = CreateScope();
-            var handler = scope.ServiceProvider.GetService<IMediator<GetWebsites, List<WebsiteOutputModel>>>();
+            var handler = scope.ServiceProvider.GetService<IRequestHandler<GetWebsites, OperationResult<List<WebsiteOutputModel>>>>();
 
             // Act
-            var query = new GetWebsites {PageNumber = 1, PageSize = 3, OrderBy = string.Empty};
-            var operationResult = await handler.HandleAsync(query);
+            var request = new GetWebsites { PageNumber = 1, PageSize = 3, OrderBy = string.Empty };
+            var getWebsitesOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
-            operationResult.Result.Count.Should().Be(2);
-            operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
-            operationResult.Should().BeOfType(typeof(OperationResult<List<WebsiteOutputModel>>));
+            getWebsitesOperation.Result.Count.Should().Be(2);
+            getWebsitesOperation.IsSuccessful.Should().BeTrue();
+            getWebsitesOperation.Errors.Should().BeNull();
+            getWebsitesOperation.Should().BeOfType(typeof(OperationResult<List<WebsiteOutputModel>>));
 
-            WebsiteOutputModel actualWebsite = operationResult.Result.SingleOrDefault(w => w.Url == "www.mysite.com");
+            WebsiteOutputModel actualWebsite = getWebsitesOperation.Result.SingleOrDefault(w => w.Url == "www.mysite.com");
             actualWebsite.Name.Should().Be("myWebsite");
             actualWebsite.Url.Should().Be("www.mysite.com");
             actualWebsite.Categories.Count.Should().Be(2);
@@ -47,7 +48,7 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
             actualWebsite.Login.Password.Should().Be("123456");
 
 
-            WebsiteOutputModel actualWebsite1 = operationResult.Result.SingleOrDefault(w => w.Url == "www.mysite1.com");
+            WebsiteOutputModel actualWebsite1 = getWebsitesOperation.Result.SingleOrDefault(w => w.Url == "www.mysite1.com");
             actualWebsite1.Name.Should().Be("myWebsite1");
             actualWebsite1.Url.Should().Be("www.mysite1.com");
             actualWebsite1.Categories.Count.Should().Be(2);

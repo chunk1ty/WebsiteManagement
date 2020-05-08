@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using WebsiteManagement.Application.Common;
-using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites.Commands.DeleteWebsite;
 using WebsiteManagement.Domain;
 using WebsiteManagement.Infrastructure.Persistence;
@@ -25,16 +26,16 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Commands
             SeedWebsite(websiteId);
 
             IServiceScope scope = CreateScope();
-            var handler = scope.ServiceProvider.GetService<IMediator<DeleteWebsite, bool>>();
+            var handler = scope.ServiceProvider.GetService<IRequestHandler<DeleteWebsite, OperationResult<bool>>>();
 
             // Act
-            var command = new DeleteWebsite(websiteId);
-            var operationResult = await handler.HandleAsync(command);
+            var request = new DeleteWebsite(websiteId);
+            var deleteWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
-            operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
-            operationResult.Should().BeOfType(typeof(OperationResult<bool>));
+            deleteWebsiteOperation.IsSuccessful.Should().BeTrue();
+            deleteWebsiteOperation.Errors.Should().BeNull();
+            deleteWebsiteOperation.Should().BeOfType(typeof(OperationResult<bool>));
 
             Website actualWebsite;
             using (var db = scope.ServiceProvider.GetService<WebsiteManagementDbContext>())

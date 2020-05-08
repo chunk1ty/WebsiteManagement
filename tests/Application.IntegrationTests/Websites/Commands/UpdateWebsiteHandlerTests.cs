@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using WebsiteManagement.Application.Common;
-using WebsiteManagement.Application.Interfaces;
+using WebsiteManagement.Application.Websites.Commands.Abstract;
 using WebsiteManagement.Application.Websites.Commands.UpdateWebsite;
 using WebsiteManagement.Domain;
 using WebsiteManagement.Infrastructure.Persistence;
@@ -25,16 +27,16 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Commands
             SeedWebsite(websiteId);
 
             IServiceScope scope = CreateScope();
-            var handler = scope.ServiceProvider.GetService<IMediator<UpdateWebsite, bool>>();
+            var handler = scope.ServiceProvider.GetService<IRequestHandler<UpdateWebsite, OperationResult<bool>>>();
 
             // Act
-            var command = new UpdateWebsite(websiteId, "mySiteEdited", "www.mysiteedited.com", new List<string> { "edit" }, "myImageEdited.png", "image/png", new byte[42], "ankEdited@ank.bg", "654321");
-            var operationResult = await handler.HandleAsync(command);
+            var request = new UpdateWebsite(websiteId, "mySiteEdited", "www.mysiteedited.com", new List<string> { "edit" }, new ImageManipulation("myImageEdited.png", "image/png", new byte[42]), "ankEdited@ank.bg", "654321");
+            var updateWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
-            operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
-            operationResult.Should().BeOfType(typeof(OperationResult<bool>));
+            updateWebsiteOperation.IsSuccessful.Should().BeTrue();
+            updateWebsiteOperation.Errors.Should().BeNull();
+            updateWebsiteOperation.Should().BeOfType(typeof(OperationResult<bool>));
 
             Website actualWebsite;
             using (var db = scope.ServiceProvider.GetService<WebsiteManagementDbContext>())

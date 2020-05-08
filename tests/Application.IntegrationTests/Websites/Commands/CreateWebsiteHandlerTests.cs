@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using WebsiteManagement.Application.Common;
-using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites;
+using WebsiteManagement.Application.Websites.Commands.Abstract;
 using WebsiteManagement.Application.Websites.Commands.CreateWebsite;
 using WebsiteManagement.Domain;
 using WebsiteManagement.Infrastructure.Persistence;
@@ -22,16 +24,16 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Commands
         {
             // Arrange
             IServiceScope scope = CreateScope();
-            var handler = scope.ServiceProvider.GetService<IMediator<CreateWebsite, WebsiteOutputModel>>();
+            var handler = scope.ServiceProvider.GetService<IRequestHandler<CreateWebsite, OperationResult<WebsiteOutputModel>>>();
 
-            // Act
-            var command = new CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, "myImage.png", "image/png", new byte[17],  "ank@ank.bg", "123456");
-            var operationResult = await handler.HandleAsync(command);
+               // Act
+               var request = new CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[17]),  "ank@ank.bg", "123456");
+            var createWebsiteOperationResult = await handler.Handle(request, CancellationToken.None);
 
             // Assert
-            operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
-            operationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            createWebsiteOperationResult.IsSuccessful.Should().BeTrue();
+            createWebsiteOperationResult.Errors.Should().BeNull();
+            createWebsiteOperationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
 
             Website actualWebsite;
             using (var db = scope.ServiceProvider.GetService<WebsiteManagementDbContext>())
@@ -40,7 +42,7 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Commands
 
                 actualWebsite = db.Websites.Include(x => x.Image)
                                             .Include(x => x.Categories)
-                                            .SingleOrDefault(x => x.Id == operationResult.Result.Id);
+                                            .SingleOrDefault(x => x.Id == createWebsiteOperationResult.Result.Id);
             }
 
             actualWebsite.Name.Should().Be("mySite");

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using WebsiteManagement.Application.Common;
-using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Queries.GetWebsite;
 using WebsiteManagement.Domain;
@@ -24,18 +25,18 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
             SeedWebsite(websiteId);
 
             IServiceScope scope = CreateScope();
-            var handler = scope.ServiceProvider.GetService<IMediator<GetWebsite, WebsiteOutputModel>>();
+            var handler = scope.ServiceProvider.GetService<IRequestHandler<GetWebsite, OperationResult<WebsiteOutputModel>>>();
 
             // Act
-            var query = new GetWebsite(websiteId);
-            var operationResult = await handler.HandleAsync(query);
+            var request = new GetWebsite(websiteId);
+            var getWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
-            operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
-            operationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            getWebsiteOperation.IsSuccessful.Should().BeTrue();
+            getWebsiteOperation.Errors.Should().BeNull();
+            getWebsiteOperation.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
 
-            WebsiteOutputModel actualWebsite = operationResult.Result;
+            WebsiteOutputModel actualWebsite = getWebsiteOperation.Result;
             actualWebsite.Name.Should().Be("myWebsite");
             actualWebsite.Url.Should().Be("www.mysite.com");
             actualWebsite.Categories.Count.Should().Be(2);
