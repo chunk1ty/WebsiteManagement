@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using WebsiteManagement.Application.Common;
+using WebsiteManagement.Application.Interfaces;
+
+namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
+{
+    public class GetWebsitesValidator : IValidator<GetWebsites>
+    {
+        private static readonly List<string> Properties = new List<string> { "Name", "Url", "Email" };
+        private static readonly List<string> Orders = new List<string> { string.Empty, "asc", "desc" };
+
+        public OperationResult<bool> IsValid(GetWebsites request)
+        {
+            if (!IsValid(request.OrderBy))
+                return OperationResult<bool>.Failure("Invalid OrderBy clause.");
+
+            return OperationResult<bool>.Success(true);
+        }
+
+        private bool IsValid(string orderBy)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+            {
+                return true;
+            }
+
+            string[] fieldsAfterSplit = orderBy.Split(',');
+
+            foreach (string field in fieldsAfterSplit)
+            {
+                string trimmedField = field.Trim();
+
+                int indexOfFirstSpace = trimmedField.IndexOf(" ", StringComparison.Ordinal);
+                string property = indexOfFirstSpace == -1 ? trimmedField :
+                    trimmedField.Remove(indexOfFirstSpace);
+
+                if (!Properties.Contains(property, StringComparer.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                string order = indexOfFirstSpace == -1 ? string.Empty : trimmedField.Substring(indexOfFirstSpace + 1);
+                if (!Orders.Contains(order, StringComparer.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+}
