@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using WebsiteManagement.Application.Websites.Commands.Abstract;
 
 namespace WebsiteManagement.Api.Models.Input
 {
@@ -16,7 +17,11 @@ namespace WebsiteManagement.Api.Models.Input
 
         public Login Login { get; set; }
 
-        protected byte[] Convert(IFormFile image)
+        protected ImageManipulation GetImage()
+        {
+            return Image is null ? null : new ImageManipulation(Image.FileName, Image.ContentType, Convert(Image));
+        }
+        private byte[] Convert(IFormFile image)
         {
             if (image is null)
             {

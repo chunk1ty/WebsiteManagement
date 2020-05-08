@@ -1,14 +1,13 @@
-﻿using WebsiteManagement.Application.Common;
-using WebsiteManagement.Application.Interfaces;
+﻿using FluentValidation;
 using WebsiteManagement.Application.Websites.Commands.Abstract;
 
 namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
 {
-    public class CreateWebsiteValidator : WebsiteBaseValidator, IValidator<CreateWebsite>
+    public class CreateWebsiteValidator : AbstractValidator<CreateWebsite>
     {
-        public OperationResult<bool> IsValid(CreateWebsite request)
+        public CreateWebsiteValidator()
         {
-            return base.IsValid(request);
+            Include(new WebsiteBaseValidator());
         }
     }
 }

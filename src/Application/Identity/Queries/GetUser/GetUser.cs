@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using WebsiteManagement.Application.Common;
@@ -10,7 +11,7 @@ namespace WebsiteManagement.Application.Identity.Queries.GetUser
     {
         public string Username { get; set; }
 
-       
+
         public string Password { get; set; }
     }
 
@@ -28,7 +29,7 @@ namespace WebsiteManagement.Application.Identity.Queries.GetUser
             var user = _authenticationService.Authenticate(command.Username, command.Password);
             if (user is null)
             {
-                return Task.FromResult(OperationResult<UserOutputModel>.Failure("Invalid user name or password"));
+                return Task.FromResult(OperationResult<UserOutputModel>.Failure(new Dictionary<string, string> { { "Login", "Invalid user name or password" } }));
             }
 
             return Task.FromResult(OperationResult<UserOutputModel>.Success(user));

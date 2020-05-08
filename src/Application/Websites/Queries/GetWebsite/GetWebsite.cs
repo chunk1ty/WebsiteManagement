@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -29,14 +30,12 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsite
             _cypher = cypher;
         }
 
-        public async Task<OperationResult<WebsiteOutputModel>> Handle(GetWebsite query, CancellationToken cancellationToken)
+        public async Task<OperationResult<WebsiteOutputModel>> Handle(GetWebsite request, CancellationToken cancellationToken)
         {
-            query = query ?? throw new ArgumentNullException(nameof(query));
-
-            Website website = await _repository.GetByIdAsync(query.WebsiteId);
+            Website website = await _repository.GetByIdAsync(request.WebsiteId);
             if (website is null)
             {
-                return OperationResult<WebsiteOutputModel>.Failure(ErrorMessages.WebsiteNotFound);
+                return OperationResult<WebsiteOutputModel>.Failure(new Dictionary<string, string> { { "WebsiteId", ErrorMessages.WebsiteNotFound } });
             }
 
             return OperationResult<WebsiteOutputModel>.Success(website.ToWebsiteOutputModel(_cypher.Decrypt(website.Password)));

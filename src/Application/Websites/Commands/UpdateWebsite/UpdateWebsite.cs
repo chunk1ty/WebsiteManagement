@@ -15,13 +15,11 @@ namespace WebsiteManagement.Application.Websites.Commands.UpdateWebsite
         public UpdateWebsite(Guid websiteId, 
                              string name, 
                              string url, 
-                             List<string> categories, 
-                             string imageName, 
-                             string imageContentType, 
-                             byte[] imageBlob, 
+                             List<string> categories,
+                             ImageManipulation image,
                              string email, 
                              string password) 
-            : base(name, url, categories, imageName, imageContentType, imageBlob, email, password)
+            : base(name, url, categories, image, email, password)
         {
             WebsiteId = websiteId;
         }
@@ -44,15 +42,15 @@ namespace WebsiteManagement.Application.Websites.Commands.UpdateWebsite
             _cypher = cypher;
         }
 
-        public async Task<OperationResult<bool>> Handle(UpdateWebsite command, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> Handle(UpdateWebsite request, CancellationToken cancellationToken)
         {
-            Website website = await _repository.GetByIdAsync(command.WebsiteId);
+            Website website = await _repository.GetByIdAsync(request.WebsiteId);
             if (website is null)
             {
-                return OperationResult<bool>.Failure(ErrorMessages.WebsiteNotFound);
+                return OperationResult<bool>.Failure(new Dictionary<string, string> { { "WebsiteId", ErrorMessages.WebsiteNotFound } });
             }
 
-            website.Update(command.ToWebsite(_cypher.Encrypt(command.Password)));
+            website.Update(request.ToWebsite(_cypher.Encrypt(request.Password)));
 
             try
             {
@@ -60,7 +58,7 @@ namespace WebsiteManagement.Application.Websites.Commands.UpdateWebsite
             }
             catch (UrlExistsException)
             {
-                return OperationResult<bool>.Failure("Url already exists.");
+                return OperationResult<bool>.Failure(new Dictionary<string, string> { { "Url", "Url already exists." } });
             }
 
             return OperationResult<bool>.Success(true);

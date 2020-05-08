@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using WebsiteManagement.Api.Models.Input;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Websites;
@@ -32,8 +28,7 @@ namespace WebsiteManagement.Api.Controllers
                 return Ok(getWebsitesOperation.Result);
             }
 
-            ModelState.AddModelError(string.Empty, getWebsitesOperation.ErrorMessage);
-            return ValidationProblem(ModelState);
+            return Errors(getWebsitesOperation.Errors);
         }
 
         [HttpGet("{websiteId}", Name = "GetWebsite")]
@@ -46,13 +41,7 @@ namespace WebsiteManagement.Api.Controllers
                 return Ok(getWebsiteOperation.Result);
             }
 
-            if (getWebsiteOperation.ErrorMessage is ErrorMessages.WebsiteNotFound)
-            {
-                return NotFound();
-            }
-
-            ModelState.AddModelError(string.Empty, getWebsiteOperation.ErrorMessage);
-            return ValidationProblem(ModelState);
+            return Errors(getWebsiteOperation.Errors);
         }
 
         [HttpPost]
@@ -65,27 +54,19 @@ namespace WebsiteManagement.Api.Controllers
                 return CreatedAtRoute("GetWebsite", new { websiteId = createWebsiteOperation.Result.Id }, createWebsiteOperation.Result);
             }
 
-            ModelState.AddModelError(string.Empty, createWebsiteOperation.ErrorMessage);
-            return ValidationProblem(ModelState);
+            return Errors(createWebsiteOperation.Errors);
         }
 
         [HttpPut("{websiteId}")]
         public async Task<ActionResult> UpdateWebsite([FromRoute]Guid websiteId, [FromForm]UpdateWebsiteInputModel updateWebsite)
         {
             OperationResult<bool> updateWebsiteOperation = await Mediator.Send(updateWebsite.ToUpdateWebsite(websiteId));
-
             if (updateWebsiteOperation.IsSuccessful)
             {
                 return NoContent();
             }
 
-            if (updateWebsiteOperation.ErrorMessage is ErrorMessages.WebsiteNotFound)
-            {
-                return NotFound();
-            }
-
-            ModelState.AddModelError(string.Empty, updateWebsiteOperation.ErrorMessage);
-            return ValidationProblem(ModelState);
+            return Errors(updateWebsiteOperation.Errors);
         }
 
         [HttpDelete("{websiteId}")]
@@ -97,13 +78,7 @@ namespace WebsiteManagement.Api.Controllers
                 return NoContent();
             }
 
-            if (deleteWebsiteOperation.ErrorMessage is ErrorMessages.WebsiteNotFound)
-            {
-                return NotFound();
-            }
-
-            ModelState.AddModelError(string.Empty, deleteWebsiteOperation.ErrorMessage);
-            return ValidationProblem(ModelState);
+            return Errors(deleteWebsiteOperation.Errors);
         }
 
         [HttpOptions]
@@ -111,13 +86,6 @@ namespace WebsiteManagement.Api.Controllers
         {
             Response.Headers.Add("Allow", "GET, HEAD, OPTIONS, POST, PUT, DELETE");
             return Ok();
-        }
-
-        public override ActionResult ValidationProblem([ActionResultObjectValue] ModelStateDictionary modelStateDictionary)
-        {
-            var options = HttpContext.RequestServices.GetRequiredService<IOptions<ApiBehaviorOptions>>();
-
-            return (ActionResult)options.Value.InvalidModelStateResponseFactory(ControllerContext);
         }
     }
 }

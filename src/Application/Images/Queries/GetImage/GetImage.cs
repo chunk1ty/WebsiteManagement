@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -34,7 +35,7 @@ namespace WebsiteManagement.Application.Images.Queries.GetImage
             Website website = await _repository.GetByIdAsync(query.WebsiteId);
             if (website is null)
             {
-                return OperationResult<ImageContentOutputModel>.Failure(ErrorMessages.WebsiteNotFound);
+                return OperationResult<ImageContentOutputModel>.Failure(new Dictionary<string, string> { { "WebsiteId", ErrorMessages.WebsiteNotFound } });
             }
 
             return OperationResult<ImageContentOutputModel>.Success(new ImageContentOutputModel(website.Image.Name, website.Image.MimeType, website.Image.Blob));

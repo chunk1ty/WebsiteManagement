@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebsiteManagement.Application.Common;
-using WebsiteManagement.Application.Interfaces;
+using FluentValidation;
 
 namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
 {
-    public class GetWebsitesValidator : IValidator<GetWebsites>
+    public class GetWebsitesValidatorValidator : AbstractValidator<GetWebsites>
     {
         private static readonly List<string> Properties = new List<string> { "Name", "Url", "Email" };
         private static readonly List<string> Orders = new List<string> { string.Empty, "asc", "desc" };
 
-        public OperationResult<bool> IsValid(GetWebsites request)
+        public GetWebsitesValidatorValidator()
         {
-            if (!IsValid(request.OrderBy))
-                return OperationResult<bool>.Failure("Invalid OrderBy clause.");
-
-            return OperationResult<bool>.Success(true);
+            RuleFor(x => x.OrderBy).Must(IsValid).WithMessage("Invalid OrderBy clause");
         }
 
         private bool IsValid(string orderBy)

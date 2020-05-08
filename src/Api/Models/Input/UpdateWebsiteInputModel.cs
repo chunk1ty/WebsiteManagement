@@ -7,15 +7,11 @@ namespace WebsiteManagement.Api.Models.Input
     {
         public UpdateWebsite ToUpdateWebsite(Guid websiteId)
         {
-            byte[] imageContent = Convert(Image);
-
             return new UpdateWebsite(websiteId,
                                     Name,
                                     Url,
                                     Categories,
-                                    Image?.FileName,
-                                    Image?.ContentType,
-                                    imageContent,
+                                    GetImage(),
                                     Login.Email,
                                     Login.Password);
         }

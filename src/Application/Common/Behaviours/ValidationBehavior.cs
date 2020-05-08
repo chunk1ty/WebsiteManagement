@@ -1,45 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
-using WebsiteManagement.Application.Interfaces;
 
 namespace WebsiteManagement.Application.Common.Behaviours
 {
-    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
+        private readonly IValidator<TRequest> _validator;
 
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+        public ValidationBehavior(IValidator<TRequest> validator)
         {
-            _validators = validators;
+            _validator = validator;
         }
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            request = request ?? throw new ArgumentNullException(nameof(request));
+            var context = new ValidationContext(request);
 
-            if (!_validators.Any())
+            ValidationResult validationResult = _validator.Validate(context);
+            if (validationResult.IsValid)
             {
                 return next();
             }
 
-            foreach (var validator in _validators)
-            {
-                OperationResult<bool> operationResult = validator.IsValid(request);
+            Dictionary<string, string> errors = validationResult.Errors.ToDictionary(key => key.PropertyName, value => value.ErrorMessage);
 
-                if (!operationResult.IsSuccessful)
-                {
-                    dynamic result = typeof(TResponse).GetMethod("Failure").Invoke(null, new[] { operationResult.ErrorMessage });
+            dynamic result = typeof(TResponse).GetMethod("Failure")?.Invoke(null, new object[] { errors });
 
-                    return Task.FromResult<TResponse>(result);
-                }
-            }
+            return Task.FromResult<TResponse>(result);
 
-            return next();
         }
     }
 }

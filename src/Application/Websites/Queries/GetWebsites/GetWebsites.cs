@@ -30,16 +30,15 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
         private readonly IWebsiteRepository _repository;
         private readonly ICypher _cypher;
 
-        public GetWebsitesHandler(IWebsiteRepository repository,
-            ICypher cypher)
+        public GetWebsitesHandler(IWebsiteRepository repository, ICypher cypher)
         {
             _repository = repository;
             _cypher = cypher;
         }
 
-        public async Task<OperationResult<List<WebsiteOutputModel>>> Handle(GetWebsites query, CancellationToken cancellationToken)
+        public async Task<OperationResult<List<WebsiteOutputModel>>> Handle(GetWebsites request, CancellationToken cancellationToken)
         {
-            List<Website> websites = await _repository.GetAll(query.PageNumber, query.PageSize, query.OrderBy);
+            List<Website> websites = await _repository.GetAll(request.PageNumber, request.PageSize, request.OrderBy);
 
             List<WebsiteOutputModel> websitesOutputModel = websites.Select(w => w.ToWebsiteOutputModel(_cypher.Decrypt(w.Password))).ToList();
 

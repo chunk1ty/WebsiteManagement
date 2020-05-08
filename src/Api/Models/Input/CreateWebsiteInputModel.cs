@@ -6,14 +6,10 @@ namespace WebsiteManagement.Api.Models.Input
     {
         public CreateWebsite ToCreateWebsite()
         {
-            byte[] imageContent =  Convert(Image);
-
             return new CreateWebsite(Name,
                                      Url,
                                      Categories,
-                                     Image?.FileName,
-                                     Image?.ContentType,
-                                     imageContent,
+                                     GetImage(),
                                      Login.Email,
                                      Login.Password);
         }

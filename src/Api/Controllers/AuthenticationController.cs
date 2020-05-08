@@ -19,8 +19,7 @@ namespace WebsiteManagement.Api.Controllers
                 return Ok(authenticationOperation.Result);
             }
 
-            ModelState.AddModelError(string.Empty, authenticationOperation.ErrorMessage);
-            return ValidationProblem(ModelState);
+            return Errors(authenticationOperation.Errors);
         }
     }
 }

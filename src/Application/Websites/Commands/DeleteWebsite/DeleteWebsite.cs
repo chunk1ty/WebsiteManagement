@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -23,21 +24,18 @@ namespace WebsiteManagement.Application.Websites.Commands.DeleteWebsite
         private readonly IWebsiteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteWebsiteHandler(IWebsiteRepository repository,
-            IUnitOfWork unitOfWork)
+        public DeleteWebsiteHandler(IWebsiteRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<OperationResult<bool>> Handle(DeleteWebsite command, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> Handle(DeleteWebsite request, CancellationToken cancellationToken)
         {
-            command = command ?? throw new ArgumentNullException(nameof(command));
-
-            Website website = await _repository.GetByIdAsync(command.WebsiteId);
+            Website website = await _repository.GetByIdAsync(request.WebsiteId);
             if (website is null)
             {
-                return OperationResult<bool>.Failure(ErrorMessages.WebsiteNotFound);
+                return OperationResult<bool>.Failure(new Dictionary<string, string> { { "WebsiteId", ErrorMessages.WebsiteNotFound } });
             }
 
             website.IsDeleted = true;

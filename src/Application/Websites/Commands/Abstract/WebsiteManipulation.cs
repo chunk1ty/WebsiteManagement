@@ -1,27 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.Websites.Commands.Abstract
 {
-    public abstract class WebsiteManipulation //: IRequest
+    public abstract class WebsiteManipulation
     {
-        protected WebsiteManipulation(string name, 
-                                      string url, 
-                                      List<string> categories, 
-                                      string imageName, 
-                                      string imageContentType, 
-                                      byte[] imageBlob, 
-                                      string email, 
+        protected WebsiteManipulation(string name,
+                                      string url,
+                                      List<string> categories,
+                                      ImageManipulation image,
+                                      string email,
                                       string password)
         {
             Name = name;
             Url = url;
             Categories = categories;
-            ImageName = imageName;
-            ImageContentType = imageContentType;
-            ImageBlob = imageBlob;
+            Image = image;
             Email = email;
             Password = password;
         }
@@ -32,11 +27,7 @@ namespace WebsiteManagement.Application.Websites.Commands.Abstract
 
         public List<string> Categories { get; }
 
-        public string ImageName { get; }
-
-        public string ImageContentType { get; }
-
-        public byte[] ImageBlob { get; }
+        public ImageManipulation Image { get; }
 
         public string Email { get; }
 
@@ -51,13 +42,29 @@ namespace WebsiteManagement.Application.Websites.Commands.Abstract
                 Categories = Categories.Select(c => new Category { Value = c }).ToList(),
                 Image = new Image
                 {
-                    Blob = ImageBlob,
-                    Name = ImageName,
-                    MimeType = ImageContentType
+                    Name = Image.Name,
+                    Blob = Image.Blob,
+                    MimeType = Image.ContentType
                 },
                 Email = Email,
                 Password = encryptedPassword
             };
         }
+    }
+
+    public class ImageManipulation
+    {
+        public ImageManipulation(string name, string contentType, byte[] blob)
+        {
+            Name = name;
+            ContentType = contentType;
+            Blob = blob;
+        }
+
+        public string Name { get; }
+
+        public string ContentType { get; }
+
+        public byte[] Blob { get; }
     }
 }

@@ -11,15 +11,13 @@ namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
 {
     public class CreateWebsite : WebsiteManipulation, IRequest<OperationResult<WebsiteOutputModel>>
     {
-        public CreateWebsite(string name, 
-                             string url, 
+        public CreateWebsite(string name,
+                             string url,
                              List<string> categories,
-                             string imageName, 
-                             string imageContentType, 
-                             byte[] imageBlob, 
-                             string email, 
-                             string password) 
-            : base(name, url, categories, imageName, imageContentType, imageBlob, email, password)
+                             ImageManipulation image,
+                             string email,
+                             string password)
+            : base(name, url, categories, image, email, password)
         {
         }
     }
@@ -30,9 +28,7 @@ namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICypher _cypher;
 
-        public CreateWebsiteHandler(IWebsiteRepository repository,
-            IUnitOfWork unitOfWork,
-            ICypher cypher)
+        public CreateWebsiteHandler(IWebsiteRepository repository, IUnitOfWork unitOfWork, ICypher cypher)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
@@ -53,7 +49,7 @@ namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
             }
             catch (UrlExistsException)
             {
-                return OperationResult<WebsiteOutputModel>.Failure("Url already exists.");
+                return OperationResult<WebsiteOutputModel>.Failure(new Dictionary<string, string> { { "Url", "Url already exists." } });
             }
 
             return OperationResult<WebsiteOutputModel>.Success(website.ToWebsiteOutputModel(passwordAsPlainText));

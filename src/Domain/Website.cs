@@ -9,7 +9,6 @@ namespace WebsiteManagement.Domain
 
         public string Name { get; set; }
                
-        //TODO should I encode you ?!
         public string Url { get; set; }
 
         public List<Category> Categories { get; set; }

@@ -20,12 +20,7 @@ namespace WebsiteManagement.Api.Controllers
                 return File(getImageOperation.Result.Blob, getImageOperation.Result.ContentType, getImageOperation.Result.Name);
             }
 
-            if (getImageOperation.ErrorMessage is ErrorMessages.WebsiteNotFound)
-            {
-                return NotFound();
-            }
-
-            return BadRequest();
+            return Errors(getImageOperation.Errors);
         }
     }
 }

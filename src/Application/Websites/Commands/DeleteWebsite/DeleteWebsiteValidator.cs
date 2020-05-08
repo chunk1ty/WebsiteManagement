@@ -1,6 +1,11 @@
-﻿namespace WebsiteManagement.Application.Websites.Commands.DeleteWebsite
+﻿using FluentValidation;
+
+namespace WebsiteManagement.Application.Websites.Commands.DeleteWebsite
 {
-    public class DeleteWebsiteValidator
+    public class DeleteWebsiteValidator : AbstractValidator<DeleteWebsite>
     {
+        public DeleteWebsiteValidator()
+        {
+        }
     }
 }
