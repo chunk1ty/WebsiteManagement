@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using WebsiteManagement.Application.Websites.Commands.Abstract;
 
 namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsite
 {
@@ -12,7 +13,7 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
         public void ToWebsite_WithCorrectCreateWebsite_ShouldReturnWebsite()
         {
             // Arrange
-            var createWebsite = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.ank.com", new List<string>() {"cat"}, "myimg", "png", new byte [4], "a@ank.bg", "123456" );
+            var createWebsite = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.ank.com", new List<string> { "cat" }, new ImageManipulation("myimg", "png", new byte[4]), "a@ank.bg", "123456");
 
             // Act
             var website = createWebsite.ToWebsite("encryptedPassword");

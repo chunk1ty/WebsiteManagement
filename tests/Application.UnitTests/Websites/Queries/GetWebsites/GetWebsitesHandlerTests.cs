@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -36,12 +37,11 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
             // Act
             var query = new Application.Websites.Queries.GetWebsites.GetWebsites { PageNumber = 1, PageSize = 10, OrderBy = "name desc" };
 
-            OperationResult<List<WebsiteOutputModel>> operationResult = await handler.HandleAsync(query);
+            OperationResult<List<WebsiteOutputModel>> operationResult = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             operationResult.Should().BeOfType(typeof(OperationResult<List<WebsiteOutputModel>>));
             operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
             operationResult.Result.Should().NotBeNull();
 
             _repositoryMock.Verify(x => x.GetAll(It.Is<int>(x => x == 1),

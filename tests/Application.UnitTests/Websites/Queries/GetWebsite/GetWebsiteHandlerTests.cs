@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -26,19 +28,6 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsite
         }
 
         [Test]
-        public void GetAsync_WhenQueryIsNull_ShouldReturnFailureResult()
-        {
-            // Arrange
-            var handler = new GetWebsiteHandler(_repositoryMock.Object, _cyhperMock.Object);
-
-            // Act
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(() => handler.HandleAsync(null));
-
-            // Assert
-            ex.Message.Should().Contain("query");
-        }
-
-        [Test]
         public async Task GetAsync_WhenWebsiteNotFound_ShouldReturnFailureResult()
         {
             // Arrange
@@ -48,12 +37,13 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsite
 
             // Act
             var query = new Application.Websites.Queries.GetWebsite.GetWebsite(Guid.Empty);
-            OperationResult<WebsiteOutputModel> operationResult = await handler.HandleAsync(query);
+            OperationResult<WebsiteOutputModel> operationResult = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             operationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
             operationResult.IsSuccessful.Should().BeFalse();
-            operationResult.ErrorMessage.Should().Be(ErrorMessages.WebsiteNotFound);
+            operationResult.Errors.First().Key.Should().Be("WebsiteId");
+            operationResult.Errors.First().Value.Should().Be(ErrorMessages.WebsiteNotFound);
         }
 
         [Test]
@@ -79,13 +69,11 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsite
 
             // Act
             var query = new Application.Websites.Queries.GetWebsite.GetWebsite(Guid.Empty);
-            OperationResult<WebsiteOutputModel> operationResult = await handler.HandleAsync(query);
+            OperationResult<WebsiteOutputModel> operationResult = await handler.Handle(query, CancellationToken.None);
 
             // Assert
             operationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
             operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
-            operationResult.Result.Should().NotBeNull();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -24,19 +26,6 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.DeleteWebsit
         }
 
         [Test]
-        public void HandleAsync_WhenCommandIsNull_ShouldThrowArgumentNullException()
-        {
-            // Arrange
-            var handler = new DeleteWebsiteHandler(_repositoryMock.Object, _unitOfWorkMock.Object);
-
-            // Act
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(() => handler.HandleAsync(null));
-
-            // Assert
-            ex.Message.Should().Contain("command");
-        }
-
-        [Test]
         public async Task HandleAsync_WhenWebsiteNotFound_ShouldReturnFailureResult()
         {
             // Arrange
@@ -47,12 +36,14 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.DeleteWebsit
 
             // Act
             var command = new Application.Websites.Commands.DeleteWebsite.DeleteWebsite(Guid.Empty);
-            OperationResult<bool> operationResult = await handler.HandleAsync(command);
+            OperationResult<bool> operationResult = await handler.Handle(command, CancellationToken.None);
 
             // Assert
             operationResult.Should().BeOfType(typeof(OperationResult<bool>));
             operationResult.IsSuccessful.Should().BeFalse();
-            operationResult.ErrorMessage.Should().Be(ErrorMessages.WebsiteNotFound);
+            operationResult.Errors.Count.Should().Be(1);
+            operationResult.Errors.First().Key.Should().Be("WebsiteId");
+            operationResult.Errors.First().Value.Should().Be(ErrorMessages.WebsiteNotFound);
         }
 
         [Test]
@@ -66,14 +57,14 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.DeleteWebsit
 
             // Act
             var command = new Application.Websites.Commands.DeleteWebsite.DeleteWebsite(Guid.Empty);
-            OperationResult<bool> operationResult = await handler.HandleAsync(command);
+            OperationResult<bool> operationResult = await handler.Handle(command, CancellationToken.None);
 
             // Assert
             operationResult.Should().BeOfType(typeof(OperationResult<bool>));
             operationResult.IsSuccessful.Should().BeTrue();
-            operationResult.ErrorMessage.Should().BeNull();
+            operationResult.Errors.Should().BeNull();
 
-            _unitOfWorkMock.Verify(x => x.CommitAsync(), Times.Once());
+            _unitOfWorkMock.Verify(x => x.CommitAsync(CancellationToken.None), Times.Once());
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -7,6 +8,7 @@ using NUnit.Framework;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites;
+using WebsiteManagement.Application.Websites.Commands.Abstract;
 using WebsiteManagement.Application.Websites.Commands.CreateWebsite;
 using WebsiteManagement.Domain;
 
@@ -31,17 +33,21 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
         public async Task HandleAsync_WhenCommitAsyncThrowsUrlExistsException_ShouldReturnFailureResult()
         {
             // Arrange
-            _unitOfWorkMock.Setup(x => x.CommitAsync()).Throws<UrlExistsException>();
+            _unitOfWorkMock.Setup(x => x.CommitAsync(CancellationToken.None)).Throws<UrlExistsException>();
             var handler = new CreateWebsiteHandler(_repositoryMock.Object, _unitOfWorkMock.Object, _cypherMock.Object);
 
             // Act
-            var command = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1,cat2" }, "myImage.png", "image/png", new byte[1], "ank@ank.bg", "123456");
-            OperationResult<WebsiteOutputModel> createWebsiteOperation = await handler.HandleAsync(command);
+            var request = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1,cat2" }, new ImageManipulation( "myImage.png", "image/png", new byte[1]), "ank@ank.bg", "123456");
+            OperationResult<WebsiteOutputModel> createWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
+            _unitOfWorkMock.Verify(x => x.CommitAsync(CancellationToken.None), Times.Once);
+
             createWebsiteOperation.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
             createWebsiteOperation.IsSuccessful.Should().BeFalse();
-            createWebsiteOperation.ErrorMessage.Should().Be("Url already exists.");
+            createWebsiteOperation.Errors.Count.Should().Be(1);
+            createWebsiteOperation.Errors.First().Key.Should().Be("Url");
+            createWebsiteOperation.Errors.First().Value.Should().Be("Url already exists.");
         }
 
         [Test]
@@ -51,16 +57,16 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
             var handler = new CreateWebsiteHandler(_repositoryMock.Object, _unitOfWorkMock.Object, _cypherMock.Object);
 
             // Act
-            var command = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, "myImage.png", "image/png", new byte[1], "ank@ank.bg", "123456");
-            OperationResult<WebsiteOutputModel> createWebsiteOperation = await handler.HandleAsync(command);
+            var request = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[1]), "ank@ank.bg", "123456");
+            OperationResult<WebsiteOutputModel> createWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
-            _unitOfWorkMock.Verify(x => x.CommitAsync(), Times.Once());
+            _unitOfWorkMock.Verify(x => x.CommitAsync(CancellationToken.None), Times.Once);
             _repositoryMock.Verify(x => x.Add(It.IsAny<Website>()), Times.Once);
 
             createWebsiteOperation.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
             createWebsiteOperation.IsSuccessful.Should().BeTrue();
-            createWebsiteOperation.ErrorMessage.Should().BeNull();
+            createWebsiteOperation.Errors.Should().BeNull();
 
             createWebsiteOperation.Result.Name.Should().Be("mySite");
             createWebsiteOperation.Result.Url.Should().Be("www.mysite.com");

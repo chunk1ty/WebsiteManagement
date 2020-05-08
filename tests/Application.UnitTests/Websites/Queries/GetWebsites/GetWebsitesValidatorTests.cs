@@ -1,11 +1,28 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
+using MediatR;
 using NUnit.Framework;
+using WebsiteManagement.Application.Common;
+using WebsiteManagement.Application.Common.Behaviours;
+using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Queries.GetWebsites;
 
 namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
 {
-    class GetWebsitesValidatorTests
+    [TestFixture]
+    public class GetWebsitesValidatorTests
     {
+        private ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsites, OperationResult<List<WebsiteOutputModel>>> _validator;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _validator = new ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsites, OperationResult<List<WebsiteOutputModel>>>(new GetWebsitesValidatorValidator());
+        }
+
         [TestCase("url")]
         [TestCase("uRl")]
         [TestCase("url desc")]
@@ -17,18 +34,18 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
         [TestCase("  name")]
         [TestCase("  name asc")]
         [TestCase("  name desc  ")]
-        public void Validate_WithCorrectOrderByClause_ShouldNotReturnValidationResult(string orderBy)
+        public async Task Validate_WithCorrectOrderByClause_ShouldNotReturnValidationResult(string orderBy)
         {
             // Arrange
-           var validator = new GetWebsitesValidator();
+            RequestHandlerDelegate<OperationResult<List<WebsiteOutputModel>>> requestHandlerDelegate = () => Task.FromResult(OperationResult<List<WebsiteOutputModel>>.Success(null));
 
-           // Act
-           var query = new Application.Websites.Queries.GetWebsites.GetWebsites { PageNumber = 1, PageSize = 10, OrderBy = orderBy };
-           var validationResult = validator.IsValid(query);
+            // Act
+            var query = new Application.Websites.Queries.GetWebsites.GetWebsites { PageNumber = 1, PageSize = 10, OrderBy = orderBy };
+            var validationResult = await _validator.Handle(query, CancellationToken.None, requestHandlerDelegate);
 
             // Assert
             validationResult.IsSuccessful.Should().BeTrue();
-            validationResult.Result.Should().BeTrue();
+
         }
 
         [TestCase("url    asc")]
@@ -42,18 +59,20 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
         [TestCase("gfdgdfg asc")]
         [TestCase("asc")]
         [TestCase("desc")]
-        public void Validate_WithIncorrectOrderByClause_ShouldReturnValidationResult(string orderBy)
+        public async Task Validate_WithIncorrectOrderByClause_ShouldReturnValidationResult(string orderBy)
         {
             // Arrange
-            var validator = new GetWebsitesValidator();
+            RequestHandlerDelegate<OperationResult<List<WebsiteOutputModel>>> requestHandlerDelegate = () => Task.FromResult(OperationResult<List<WebsiteOutputModel>>.Success(null));
 
             // Act
             var query = new Application.Websites.Queries.GetWebsites.GetWebsites { PageNumber = 1, PageSize = 10, OrderBy = orderBy };
-            var validationResult = validator.IsValid(query);
+            var validationResult = await _validator.Handle(query, CancellationToken.None, requestHandlerDelegate);
 
             // Assert
             validationResult.IsSuccessful.Should().BeFalse();
-            validationResult.ErrorMessage.Should().Be("Invalid OrderBy clause.");
+            validationResult.Errors.Count.Should().Be(1);
+            validationResult.Errors.First().Key.Should().Be("OrderBy");
+            validationResult.Errors.First().Value.Should().Be("Invalid OrderBy clause");
         }
     }
 }

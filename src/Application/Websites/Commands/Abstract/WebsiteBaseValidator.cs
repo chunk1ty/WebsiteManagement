@@ -12,7 +12,7 @@ namespace WebsiteManagement.Application.Websites.Commands.Abstract
         internal WebsiteBaseValidator()
         {
             RuleFor(x => x.Name).NotNull().WithMessage("Name is required.")
-                                .Length(3, 100).WithMessage("Name should be more than 3 and less than 100 characters");
+                                .Length(3, 100).WithMessage("Name should be more than 3 and less than 100 characters.");
             
             RuleFor(x => x.Url).NotNull().WithMessage("Url is required.")
                                .Length(3, 100).WithMessage("Url should be more than 3 and less than 100 characters");
