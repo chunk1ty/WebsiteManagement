@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using WebsiteManagement.Api.Filters;
 using WebsiteManagement.Application;
 using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Infrastructure;
@@ -29,7 +28,6 @@ namespace WebsiteManagement.Api
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-                setupAction.Filters.Add<LoggingFilter>();
             }).AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             var key = Encoding.ASCII.GetBytes("my secret keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
@@ -73,6 +71,7 @@ namespace WebsiteManagement.Api
                     });
                 });
             }
+            //app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
