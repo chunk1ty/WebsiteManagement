@@ -20,7 +20,7 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
         [SetUp]
         public void SetUp()
         {
-            _validator = new ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsites, OperationResult<List<WebsiteOutputModel>>>(new GetWebsitesValidatorValidator());
+            _validator = new ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsites, OperationResult<List<WebsiteOutputModel>>>(new GetWebsitesValidator());
         }
 
         [TestCase("url")]
@@ -45,7 +45,6 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
 
             // Assert
             validationResult.IsSuccessful.Should().BeTrue();
-
         }
 
         [TestCase("url    asc")]

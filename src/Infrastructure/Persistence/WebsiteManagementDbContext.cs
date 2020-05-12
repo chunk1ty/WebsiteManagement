@@ -15,24 +15,16 @@ namespace WebsiteManagement.Infrastructure.Persistence
         }
 
         public DbSet<Domain.Website> Websites { get; set; }
-       
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new WebsiteEntityConfigurations());
-            modelBuilder.ApplyConfiguration(new CategoryEntityConfigurations());
-            modelBuilder.ApplyConfiguration(new ImageEntityConfigurations());
-        }
 
         public async Task CommitAsync(CancellationToken cancellationToken)
         {
             try
             {
-                await base.SaveChangesAsync(cancellationToken);
+                await SaveChangesAsync(cancellationToken);
             }
             catch (DbUpdateException ex)
             {
-                if (ex.InnerException != null && 
+                if (ex.InnerException != null &&
                     ex.InnerException.Message.Contains("Cannot insert duplicate key row in object 'dbo.websites' with unique index 'IX_websites_Url'"))
                 {
                     throw new UrlExistsException(ex.Message, ex);
@@ -40,6 +32,13 @@ namespace WebsiteManagement.Infrastructure.Persistence
 
                 throw;
             }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new WebsiteEntityConfigurations());
+            modelBuilder.ApplyConfiguration(new CategoryEntityConfigurations());
+            modelBuilder.ApplyConfiguration(new ImageEntityConfigurations());
         }
     }
 }

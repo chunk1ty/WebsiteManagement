@@ -33,7 +33,6 @@ namespace WebsiteManagement.Application.Common.Behaviours
             dynamic result = typeof(TResponse).GetMethod("Failure")?.Invoke(null, new object[] { errors });
 
             return Task.FromResult<TResponse>(result);
-
         }
     }
 }

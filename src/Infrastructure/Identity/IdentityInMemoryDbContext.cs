@@ -6,11 +6,11 @@ namespace WebsiteManagement.Infrastructure.Identity
     {
         private static IdentityInMemoryDbContext _context;
 
+        private readonly List<User> _users = new List<User> { new User(1, "admin", "admin") };
+
         private IdentityInMemoryDbContext()
         {
         }
-
-        public readonly List<User> Users = new List<User> {new User(1, "admin", "admin")};
 
         public static IdentityInMemoryDbContext Instance
         {
@@ -24,5 +24,7 @@ namespace WebsiteManagement.Infrastructure.Identity
                 return _context;
             }
         }
+
+        public List<User> Users => _users;
     }
 }

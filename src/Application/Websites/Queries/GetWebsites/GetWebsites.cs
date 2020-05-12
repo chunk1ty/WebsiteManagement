@@ -12,10 +12,10 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
     public sealed class GetWebsites : IRequest<OperationResult<List<WebsiteOutputModel>>>
     {
         private const int MaxPageSize = 20;
+        private int _pageSize = 10;
 
         public int PageNumber { get; set; } = 1;
 
-        private int _pageSize = 10;
         public int PageSize
         {
             get => _pageSize;

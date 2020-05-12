@@ -78,6 +78,7 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
         public async Task IsValid_WhenFileIsGreaterThan5Mb_ReturnFailureResult()
         {
             long fileLength = 6 * 1024 * 1024;
+
             // Act
             var command = new Application.Websites.Commands.CreateWebsite.CreateWebsite("aaaa", "www.mysite.com", new List<string> { "cat1,cat2" }, new ImageManipulation("$myImage.png", "image/png", new byte[fileLength]), "ank@ank.bg", "123456");
 
@@ -89,7 +90,6 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
             validationResult.Errors.First().Key.Should().Be("Image");
             validationResult.Errors.First().Value.Should().Be("File size is greater than 5 MB.");
         }
-
 
         [Test]
         public async Task IsValid_WhenRequestIsValid_ReturnSuccessResult()

@@ -63,9 +63,9 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
                     {
                         Name = "myImage.png",
                         Blob = new byte[17],
-                        MimeType = "image/png"
+                        MimeType = "image/png",
                     },
-                    Categories = new List<Category> { new Category { Value = "category 1" }, new Category() { Value = "category 2" } }
+                    Categories = new List<Category> { new Category { Value = "category 1" }, new Category { Value = "category 2" } },
                 };
 
                 db.Websites.Add(website);

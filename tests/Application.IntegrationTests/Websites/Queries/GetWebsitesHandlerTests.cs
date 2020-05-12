@@ -47,7 +47,6 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
             actualWebsite.Login.Email.Should().Be("ank@ank.bg");
             actualWebsite.Login.Password.Should().Be("123456");
 
-
             WebsiteOutputModel actualWebsite1 = getWebsitesOperation.Result.SingleOrDefault(w => w.Url == "www.mysite1.com");
             actualWebsite1.Name.Should().Be("myWebsite1");
             actualWebsite1.Url.Should().Be("www.mysite1.com");
@@ -75,9 +74,9 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
                     {
                         Name = "myImage.png",
                         Blob = new byte[17],
-                        MimeType = "image/png"
+                        MimeType = "image/png",
                     },
-                    Categories = new List<Category> { new Category { Value = "category 1" }, new Category() { Value = "category 2" } }
+                    Categories = new List<Category> { new Category { Value = "category 1" }, new Category { Value = "category 2" } },
                 };
                 db.Websites.Add(website);
 
@@ -92,9 +91,9 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
                     {
                         Name = "myImage1.png",
                         Blob = new byte[17],
-                        MimeType = "image/png"
+                        MimeType = "image/png",
                     },
-                    Categories = new List<Category> { new Category { Value = "category 11" }, new Category() { Value = "category 21" } }
+                    Categories = new List<Category> { new Category { Value = "category 11" }, new Category { Value = "category 21" } },
                 };
                 db.Websites.Add(website1);
 
@@ -109,10 +108,10 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
                     {
                         Name = "myImage2.png",
                         Blob = new byte[17],
-                        MimeType = "image/png"
+                        MimeType = "image/png",
                     },
                     Categories = new List<Category> { new Category { Value = "category 112" }, new Category() { Value = "category 212" } },
-                    IsDeleted = true
+                    IsDeleted = true,
                 };
                 db.Websites.Add(website2);
 

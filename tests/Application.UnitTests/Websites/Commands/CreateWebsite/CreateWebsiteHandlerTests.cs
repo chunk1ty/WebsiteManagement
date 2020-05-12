@@ -37,7 +37,7 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
             var handler = new CreateWebsiteHandler(_repositoryMock.Object, _unitOfWorkMock.Object, _cypherMock.Object);
 
             // Act
-            var request = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1,cat2" }, new ImageManipulation( "myImage.png", "image/png", new byte[1]), "ank@ank.bg", "123456");
+            var request = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1,cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[1]), "ank@ank.bg", "123456");
             OperationResult<WebsiteOutputModel> createWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert

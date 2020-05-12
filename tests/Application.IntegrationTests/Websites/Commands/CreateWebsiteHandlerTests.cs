@@ -27,7 +27,7 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Commands
             var handler = scope.ServiceProvider.GetService<IRequestHandler<CreateWebsite, OperationResult<WebsiteOutputModel>>>();
 
                // Act
-               var request = new CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[17]),  "ank@ank.bg", "123456");
+            var request = new CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[17]),  "ank@ank.bg", "123456");
             var createWebsiteOperationResult = await handler.Handle(request, CancellationToken.None);
 
             // Assert

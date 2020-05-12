@@ -16,7 +16,7 @@ namespace WebsiteManagement.Infrastructure.Persistence.Migrations
                     Url = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false)
+                    IsDeleted = table.Column<bool>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace WebsiteManagement.Infrastructure.Persistence.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     WebsiteId = table.Column<Guid>(nullable: false),
-                    Value = table.Column<string>(nullable: false)
+                    Value = table.Column<string>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -52,7 +52,7 @@ namespace WebsiteManagement.Infrastructure.Persistence.Migrations
                     WebsiteId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Blob = table.Column<byte[]>(nullable: false),
-                    MimeType = table.Column<string>(nullable: true)
+                    MimeType = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {

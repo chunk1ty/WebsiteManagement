@@ -31,7 +31,7 @@ namespace WebsiteManagement.Infrastructure.Persistence
             {
                 websiteCollection = websiteCollection.OrderBy(orderBy);
             }
-            
+
             return await websiteCollection.Include(w => w.Categories)
                                           .Include(w => w.Image)
                                           .Where(x => !x.IsDeleted)
@@ -45,10 +45,10 @@ namespace WebsiteManagement.Infrastructure.Persistence
                                               Categories = w.Categories,
                                               Image = new Image
                                               {
-                                                  Name = w.Image.Name
+                                                  Name = w.Image.Name,
                                               },
                                               Email = w.Email,
-                                              Password = w.Password
+                                              Password = w.Password,
                                           })
                                           .ToListAsync();
         }
@@ -57,7 +57,7 @@ namespace WebsiteManagement.Infrastructure.Persistence
         {
             return await _context.Websites.Include(w => w.Categories)
                                           .Include(w => w.Image)
-                                          .SingleOrDefaultAsync(x => x.Id == id && 
+                                          .SingleOrDefaultAsync(x => x.Id == id &&
                                                                      !x.IsDeleted);
         }
     }

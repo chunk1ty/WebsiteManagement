@@ -11,7 +11,6 @@ namespace WebsiteManagement.Application.Identity.Queries.GetUser
     {
         public string Username { get; set; }
 
-
         public string Password { get; set; }
     }
 

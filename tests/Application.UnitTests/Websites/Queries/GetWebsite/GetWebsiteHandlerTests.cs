@@ -60,9 +60,9 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsite
                 {
                     Name = "myImage.png",
                     Blob = new byte[17],
-                    MimeType = "image/png"
+                    MimeType = "image/png",
                 },
-                Categories = new List<Category> { new Category { Value = "category 1" }, new Category() { Value = "category 2" } }
+                Categories = new List<Category> { new Category { Value = "category 1" }, new Category { Value = "category 2" } },
             };
             _repositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(website);
             var handler = new GetWebsiteHandler(_repositoryMock.Object, _cyhperMock.Object);

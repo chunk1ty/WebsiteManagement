@@ -13,7 +13,7 @@ namespace WebsiteManagement.Application.IntegrationTests
         private ServiceProvider _container;
 
         [OneTimeSetUp]
-        public void  OneTimeSetUp()
+        public void OneTimeSetUp()
         {
             var services = new ServiceCollection();
 

@@ -8,7 +8,7 @@ namespace WebsiteManagement.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Website> websiteConfiguration)
         {
-            RelationalEntityTypeBuilderExtensions.ToTable((EntityTypeBuilder) websiteConfiguration, "websites");
+            RelationalEntityTypeBuilderExtensions.ToTable((EntityTypeBuilder)websiteConfiguration, "websites");
 
             websiteConfiguration.HasKey(w => w.Id);
             websiteConfiguration.HasOne(w => w.Image);

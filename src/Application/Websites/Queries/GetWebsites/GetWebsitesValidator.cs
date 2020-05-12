@@ -5,12 +5,12 @@ using FluentValidation;
 
 namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
 {
-    public class GetWebsitesValidatorValidator : AbstractValidator<GetWebsites>
+    public class GetWebsitesValidator : AbstractValidator<GetWebsites>
     {
         private static readonly List<string> Properties = new List<string> { "Name", "Url", "Email" };
         private static readonly List<string> Orders = new List<string> { string.Empty, "asc", "desc" };
 
-        public GetWebsitesValidatorValidator()
+        public GetWebsitesValidator()
         {
             RuleFor(x => x.OrderBy).Must(IsValid).WithMessage("Invalid OrderBy clause");
         }
@@ -43,6 +43,7 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
                     return false;
                 }
             }
+
             return true;
         }
     }

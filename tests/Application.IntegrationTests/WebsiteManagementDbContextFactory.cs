@@ -5,7 +5,7 @@ using WebsiteManagement.Infrastructure.Persistence;
 
 namespace WebsiteManagement.Application.IntegrationTests
 {
-    // used to initialize WebsiteManagementIntegrationTestsDbContext 
+    // used to initialize WebsiteManagementIntegrationTestsDbContext
     public class WebsiteManagementDbContextFactory : IDesignTimeDbContextFactory<WebsiteManagementDbContext>
     {
         public WebsiteManagementDbContext CreateDbContext(string[] args)

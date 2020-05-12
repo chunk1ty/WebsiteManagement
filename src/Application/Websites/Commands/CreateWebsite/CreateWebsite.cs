@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites.Commands.Abstract;
 using WebsiteManagement.Domain;
-using MediatR;
-using System.Threading;
 
 namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
 {

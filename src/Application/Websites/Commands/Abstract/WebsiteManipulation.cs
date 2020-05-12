@@ -44,10 +44,10 @@ namespace WebsiteManagement.Application.Websites.Commands.Abstract
                 {
                     Name = Image.Name,
                     Blob = Image.Blob,
-                    MimeType = Image.ContentType
+                    MimeType = Image.ContentType,
                 },
                 Email = Email,
-                Password = encryptedPassword
+                Password = encryptedPassword,
             };
         }
     }

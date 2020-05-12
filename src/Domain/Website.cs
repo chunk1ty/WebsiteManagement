@@ -8,7 +8,7 @@ namespace WebsiteManagement.Domain
         public Guid Id { get; set; }
 
         public string Name { get; set; }
-               
+
         public string Url { get; set; }
 
         public List<Category> Categories { get; set; }
