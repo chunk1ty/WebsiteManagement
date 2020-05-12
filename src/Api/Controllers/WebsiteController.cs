@@ -11,7 +11,7 @@ using WebsiteManagement.Application.Websites.Queries.GetWebsites;
 
 namespace WebsiteManagement.Api.Controllers
 {
-    //[Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/websites")]
     public class WebsiteController : ApiController

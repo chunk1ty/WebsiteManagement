@@ -43,9 +43,8 @@ namespace WebsiteManagement.Api
                     ValidateIssuerSigningKey = false,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
                 };
-
             });
 
             services.AddInfrastructure(Configuration.GetValue<string>("ConnectionStrings:DatabaseConnection"));
@@ -71,8 +70,8 @@ namespace WebsiteManagement.Api
                     });
                 });
             }
-            //app.UseSerilogRequestLogging();
 
+            // app.UseSerilogRequestLogging();
             app.UseRouting();
 
             app.UseHttpsRedirection();

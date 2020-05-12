@@ -6,10 +6,10 @@ namespace WebsiteManagement.Application.Websites
     public class WebsiteOutputModel
     {
         public WebsiteOutputModel(Guid id,
-                                  string name, 
-                                  string url, 
-                                  List<string> categories, 
-                                  ImageOutputModel image, 
+                                  string name,
+                                  string url,
+                                  List<string> categories,
+                                  ImageOutputModel image,
                                   LoginOutputModel login)
         {
             Id = id;
@@ -17,20 +17,20 @@ namespace WebsiteManagement.Application.Websites
             Url = url;
             Categories = categories;
             Image = image;
-            Login = login;  
+            Login = login;
         }
 
         public Guid Id { get; }
 
-        public string Name { get;}
+        public string Name { get; }
 
-        public string Url { get;}
+        public string Url { get; }
 
-        public List<string> Categories { get;}
+        public List<string> Categories { get; }
 
         public ImageOutputModel Image { get; }
 
-        public LoginOutputModel Login { get;}
+        public LoginOutputModel Login { get; }
     }
 
     public class ImageOutputModel

@@ -10,7 +10,6 @@ namespace WebsiteManagement.Api.Controllers
     public class AuthenticationController : ApiController
     {
         [HttpGet]
-        
         public async Task<ActionResult<UserOutputModel>> Login([FromBody]GetUser model)
         {
             OperationResult<UserOutputModel> authenticationOperation = await Mediator.Send(model);

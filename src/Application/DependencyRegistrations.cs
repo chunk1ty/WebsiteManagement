@@ -12,7 +12,7 @@ namespace WebsiteManagement.Application
     public static class DependencyRegistrations
     {
         public static void AddApplication(this IServiceCollection services)
-        {            
+        {
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             // register all Fluent Validators
@@ -22,7 +22,7 @@ namespace WebsiteManagement.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             // explicit registration validator and pipeline registrations
-            //services.AddCreateWebsiteRegistrations();
+            // services.AddCreateWebsiteRegistrations();
         }
 
         private static void AddCreateWebsiteRegistrations(this IServiceCollection services)

@@ -6,7 +6,7 @@ using WebsiteManagement.Application.Images.Queries.GetImage;
 
 namespace WebsiteManagement.Api.Controllers
 {
-    //[Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/websites/{websiteId}/image")]
     public class ImageController : ApiController

@@ -13,8 +13,8 @@ namespace WebsiteManagement.Infrastructure.Identity
     {
         public UserOutputModel Authenticate(string username, string password)
         {
-            var user = IdentityInMemoryDbContext.Users.SingleOrDefault(u => u.Name == username &&
-                                                                            u.Password == password);
+            var user = IdentityInMemoryDbContext.Instance.Users.SingleOrDefault(u => u.Name == username &&
+                                                                                     u.Password == password);
             if (user is null)
             {
                 return null;

@@ -8,12 +8,12 @@ namespace WebsiteManagement.Api.Models.Input
         public UpdateWebsite ToUpdateWebsite(Guid websiteId)
         {
             return new UpdateWebsite(websiteId,
-                                    Name,
-                                    Url,
-                                    Categories,
-                                    GetImage(),
-                                    Login.Email,
-                                    Login.Password);
+                                     Name,
+                                     Url,
+                                     Categories,
+                                     GetImage(),
+                                     Login.Email,
+                                     Login.Password);
         }
     }
 }

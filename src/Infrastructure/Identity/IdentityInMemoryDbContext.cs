@@ -10,7 +10,7 @@ namespace WebsiteManagement.Infrastructure.Identity
         {
         }
 
-        public static List<User> Users = new List<User> {new User(1, "admin", "admin")};
+        public readonly List<User> Users = new List<User> {new User(1, "admin", "admin")};
 
         public static IdentityInMemoryDbContext Instance
         {

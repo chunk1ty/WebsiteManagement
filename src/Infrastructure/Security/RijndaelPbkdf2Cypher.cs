@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using WebsiteManagement.Application.Interfaces;
-
-namespace WebsiteManagement.Infrastructure.Security
+﻿namespace WebsiteManagement.Infrastructure.Security
 {
+    using System;
+    using System.IO;
+    using System.Security.Cryptography;
+    using System.Text;
+    using WebsiteManagement.Application.Interfaces;
+
     // https://stackoverflow.com/questions/10168240/encrypting-decrypting-a-string-in-c-sharp
     public class RijndaelPbkdf2Cypher : ICypher
     {
@@ -60,6 +60,7 @@ namespace WebsiteManagement.Infrastructure.Security
                         {
                             result = sr.ReadToEnd();
                         }
+
                         return result;
                     }
                 }

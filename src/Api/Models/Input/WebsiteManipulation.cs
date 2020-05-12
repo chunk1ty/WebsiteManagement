@@ -5,7 +5,7 @@ using WebsiteManagement.Application.Websites.Commands.Abstract;
 
 namespace WebsiteManagement.Api.Models.Input
 {
-    public abstract class WebsiteManipulation 
+    public abstract class WebsiteManipulation
     {
         public string Name { get; set; }
 
@@ -21,6 +21,7 @@ namespace WebsiteManagement.Api.Models.Input
         {
             return Image is null ? null : new ImageManipulation(Image.FileName, Image.ContentType, Convert(Image));
         }
+
         private byte[] Convert(IFormFile image)
         {
             if (image is null)

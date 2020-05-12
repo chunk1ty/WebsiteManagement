@@ -2,7 +2,7 @@
 
 namespace WebsiteManagement.Api.Models.Input
 {
-    public  class CreateWebsiteInputModel : WebsiteManipulation
+    public class CreateWebsiteInputModel : WebsiteManipulation
     {
         public CreateWebsite ToCreateWebsite()
         {

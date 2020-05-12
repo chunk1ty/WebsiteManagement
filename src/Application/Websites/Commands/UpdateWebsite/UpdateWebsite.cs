@@ -12,13 +12,13 @@ namespace WebsiteManagement.Application.Websites.Commands.UpdateWebsite
 {
     public sealed class UpdateWebsite : WebsiteManipulation, IRequest<OperationResult<bool>>
     {
-        public UpdateWebsite(Guid websiteId, 
-                             string name, 
-                             string url, 
+        public UpdateWebsite(Guid websiteId,
+                             string name,
+                             string url,
                              List<string> categories,
                              ImageManipulation image,
-                             string email, 
-                             string password) 
+                             string email,
+                             string password)
             : base(name, url, categories, image, email, password)
         {
             WebsiteId = websiteId;
