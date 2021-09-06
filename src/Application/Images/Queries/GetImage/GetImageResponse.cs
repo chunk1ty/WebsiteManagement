@@ -1,8 +1,8 @@
 ﻿namespace WebsiteManagement.Application.Images.Queries.GetImage
 {
-    public class ImageContentOutputModel
+    public class GetImageResponse
     {
-        public ImageContentOutputModel(string name, string contentType, byte[] blob)
+        public GetImageResponse(string name, string contentType, byte[] blob)
         {
             Name = name;
             ContentType = contentType;

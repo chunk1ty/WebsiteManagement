@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using MediatR;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
 {
-    public sealed class GetWebsites : IRequest<OperationResult<List<WebsiteOutputModel>>>
+    public sealed class GetWebsitesRequest : IRequest<OperationResult<List<GetWebsiteResponse>>>
     {
         private const int MaxPageSize = 20;
         private int _pageSize = 10;
@@ -25,7 +26,7 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
         public string OrderBy { get; set; }
     }
 
-    public class GetWebsitesHandler : IRequestHandler<GetWebsites, OperationResult<List<WebsiteOutputModel>>>
+    public class GetWebsitesHandler : IRequestHandler<GetWebsitesRequest, OperationResult<List<GetWebsiteResponse>>>
     {
         private readonly IWebsiteRepository _repository;
         private readonly ICypher _cypher;
@@ -36,13 +37,13 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
             _cypher = cypher;
         }
 
-        public async Task<OperationResult<List<WebsiteOutputModel>>> Handle(GetWebsites request, CancellationToken cancellationToken)
+        public async Task<OperationResult<List<GetWebsiteResponse>>> Handle(GetWebsitesRequest request, CancellationToken cancellationToken)
         {
             List<Website> websites = await _repository.GetAll(request.PageNumber, request.PageSize, request.OrderBy);
 
-            List<WebsiteOutputModel> websitesOutputModel = websites.Select(w => w.ToWebsiteOutputModel(_cypher.Decrypt(w.Password))).ToList();
+            List<GetWebsiteResponse> websitesOutputModel = websites.Select(w => w.ToWebsiteOutputModel(_cypher.Decrypt(w.Password))).ToList();
 
-            return OperationResult<List<WebsiteOutputModel>>.Success(websitesOutputModel);
+            return OperationResult<List<GetWebsiteResponse>>.Success(websitesOutputModel);
         }
     }
 }

@@ -3,7 +3,7 @@ using WebsiteManagement.Application.Websites.Commands.UpdateWebsite;
 
 namespace WebsiteManagement.Api.Models.Input
 {
-    public class UpdateWebsiteInputModel : WebsiteManipulation
+    public class UpdateWebsiteRequest : WebsiteManipulationRequest
     {
         public UpdateWebsite ToUpdateWebsite(Guid websiteId)
         {

@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using MediatR;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.Images.Queries.GetImage
 {
-    public class GetImage : IRequest<OperationResult<ImageContentOutputModel>>
+    public class GetImageRequest : IRequest<OperationResult<ImageContentOutputModel>>
     {
-        public GetImage(Guid websiteId)
+        public GetImageRequest(Guid websiteId)
         {
             WebsiteId = websiteId;
         }
@@ -19,7 +20,7 @@ namespace WebsiteManagement.Application.Images.Queries.GetImage
         public Guid WebsiteId { get; }
     }
 
-    public class GetImageHandler : IRequestHandler<GetImage, OperationResult<ImageContentOutputModel>>
+    public class GetImageHandler : IRequestHandler<GetImageRequest, OperationResult<ImageContentOutputModel>>
     {
         private readonly IWebsiteRepository _repository;
 
@@ -28,7 +29,7 @@ namespace WebsiteManagement.Application.Images.Queries.GetImage
             _repository = repository;
         }
 
-        public async Task<OperationResult<ImageContentOutputModel>> Handle(GetImage query, CancellationToken cancellationToken)
+        public async Task<OperationResult<ImageContentOutputModel>> Handle(GetImageRequest query, CancellationToken cancellationToken)
         {
             query = query ?? throw new ArgumentNullException(nameof(query));
 

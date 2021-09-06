@@ -5,14 +5,6 @@
     <RootNamespace>WebsiteManagement.Api</RootNamespace>
     <AssemblyName>WebsiteManagement.Api</AssemblyName>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Models\Output\**" />
-    <Content Remove="Models\Output\**" />
-    <EmbeddedResource Remove="Models\Output\**" />
-    <None Remove="Models\Output\**" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.9" />
@@ -29,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace WebsiteManagement.Application.Websites
 {
-    public class WebsiteOutputModel
+    public class GetWebsiteResponse
     {
-        public WebsiteOutputModel(Guid id,
+        public GetWebsiteResponse(Guid id,
                                   string name,
                                   string url,
                                   List<string> categories,

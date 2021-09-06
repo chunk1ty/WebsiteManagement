@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Images.Queries.GetImage;
+using WebsiteManagement.Common;
 
 namespace WebsiteManagement.Api.Controllers
 {
@@ -11,10 +12,10 @@ namespace WebsiteManagement.Api.Controllers
     [Route("api/websites/{websiteId}/image")]
     public class ImageController : BaseApiController
     {
-        [HttpGet(Name = "GetImage")]
+        [HttpGet(Name = "GetImageRequest")]
         public async Task<ActionResult> GetImage(Guid websiteId)
         {
-            OperationResult<ImageContentOutputModel> getImageOperation = await Mediator.Send(new GetImage(websiteId));
+            OperationResult<GetImageResponse> getImageOperation = await Mediator.Send(new GetImageRequest(websiteId));
             if (getImageOperation.IsSuccessful)
             {
                 return File(getImageOperation.Result.Blob, getImageOperation.Result.ContentType, getImageOperation.Result.Name);

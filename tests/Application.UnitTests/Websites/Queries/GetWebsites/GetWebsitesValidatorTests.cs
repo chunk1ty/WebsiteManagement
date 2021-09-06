@@ -9,18 +9,19 @@ using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Common.Behaviours;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Queries.GetWebsites;
+using WebsiteManagement.Common;
 
 namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
 {
     [TestFixture]
     public class GetWebsitesValidatorTests
     {
-        private ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsites, OperationResult<List<WebsiteOutputModel>>> _validator;
+        private ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsitesRequest, OperationResult<List<GetWebsiteResponse>>> _validator;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsites, OperationResult<List<WebsiteOutputModel>>>(new GetWebsitesValidator());
+            _validator = new ValidationBehavior<Application.Websites.Queries.GetWebsites.GetWebsitesRequest, OperationResult<List<GetWebsiteResponse>>>(new GetWebsitesValidator());
         }
 
         [TestCase("url")]
@@ -37,10 +38,10 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
         public async Task Validate_WithCorrectOrderByClause_ShouldNotReturnValidationResult(string orderBy)
         {
             // Arrange
-            RequestHandlerDelegate<OperationResult<List<WebsiteOutputModel>>> requestHandlerDelegate = () => Task.FromResult(OperationResult<List<WebsiteOutputModel>>.Success(null));
+            RequestHandlerDelegate<OperationResult<List<GetWebsiteResponse>>> requestHandlerDelegate = () => Task.FromResult(OperationResult<List<GetWebsiteResponse>>.Success(null));
 
             // Act
-            var query = new Application.Websites.Queries.GetWebsites.GetWebsites { PageNumber = 1, PageSize = 10, OrderBy = orderBy };
+            var query = new Application.Websites.Queries.GetWebsites.GetWebsitesRequest { PageNumber = 1, PageSize = 10, OrderBy = orderBy };
             var validationResult = await _validator.Handle(query, CancellationToken.None, requestHandlerDelegate);
 
             // Assert
@@ -61,10 +62,10 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
         public async Task Validate_WithIncorrectOrderByClause_ShouldReturnValidationResult(string orderBy)
         {
             // Arrange
-            RequestHandlerDelegate<OperationResult<List<WebsiteOutputModel>>> requestHandlerDelegate = () => Task.FromResult(OperationResult<List<WebsiteOutputModel>>.Success(null));
+            RequestHandlerDelegate<OperationResult<List<GetWebsiteResponse>>> requestHandlerDelegate = () => Task.FromResult(OperationResult<List<GetWebsiteResponse>>.Success(null));
 
             // Act
-            var query = new Application.Websites.Queries.GetWebsites.GetWebsites { PageNumber = 1, PageSize = 10, OrderBy = orderBy };
+            var query = new Application.Websites.Queries.GetWebsites.GetWebsitesRequest { PageNumber = 1, PageSize = 10, OrderBy = orderBy };
             var validationResult = await _validator.Handle(query, CancellationToken.None, requestHandlerDelegate);
 
             // Assert

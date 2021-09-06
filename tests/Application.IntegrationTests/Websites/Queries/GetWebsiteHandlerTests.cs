@@ -9,6 +9,7 @@ using NUnit.Framework;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Queries.GetWebsite;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 using WebsiteManagement.Infrastructure.Persistence;
 
@@ -25,18 +26,18 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Queries
             SeedWebsite(websiteId);
 
             IServiceScope scope = CreateScope();
-            var handler = scope.ServiceProvider.GetService<IRequestHandler<GetWebsite, OperationResult<WebsiteOutputModel>>>();
+            var handler = scope.ServiceProvider.GetService<IRequestHandler<GetWebsiteRequest, OperationResult<GetWebsiteResponse>>>();
 
             // Act
-            var request = new GetWebsite(websiteId);
+            var request = new GetWebsiteRequest(websiteId);
             var getWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
             getWebsiteOperation.IsSuccessful.Should().BeTrue();
             getWebsiteOperation.Errors.Should().BeNull();
-            getWebsiteOperation.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            getWebsiteOperation.Should().BeOfType(typeof(OperationResult<GetWebsiteResponse>));
 
-            WebsiteOutputModel actualWebsite = getWebsiteOperation.Result;
+            GetWebsiteResponse actualWebsite = getWebsiteOperation.Result;
             actualWebsite.Name.Should().Be("myWebsite");
             actualWebsite.Url.Should().Be("www.mysite.com");
             actualWebsite.Categories.Count.Should().Be(2);

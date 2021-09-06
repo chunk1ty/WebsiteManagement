@@ -11,6 +11,7 @@ using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Commands.Abstract;
 using WebsiteManagement.Application.Websites.Commands.CreateWebsite;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 using WebsiteManagement.Infrastructure.Persistence;
 
@@ -24,7 +25,7 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Commands
         {
             // Arrange
             IServiceScope scope = CreateScope();
-            var handler = scope.ServiceProvider.GetService<IRequestHandler<CreateWebsite, OperationResult<WebsiteOutputModel>>>();
+            var handler = scope.ServiceProvider.GetService<IRequestHandler<CreateWebsite, OperationResult<GetWebsiteResponse>>>();
 
                // Act
             var request = new CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[17]),  "ank@ank.bg", "123456");
@@ -33,7 +34,7 @@ namespace WebsiteManagement.Application.IntegrationTests.Websites.Commands
             // Assert
             createWebsiteOperationResult.IsSuccessful.Should().BeTrue();
             createWebsiteOperationResult.Errors.Should().BeNull();
-            createWebsiteOperationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            createWebsiteOperationResult.Should().BeOfType(typeof(OperationResult<GetWebsiteResponse>));
 
             Website actualWebsite;
             using (var db = scope.ServiceProvider.GetService<WebsiteManagementDbContext>())

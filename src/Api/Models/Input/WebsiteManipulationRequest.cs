@@ -5,7 +5,7 @@ using WebsiteManagement.Application.Websites.Commands.Abstract;
 
 namespace WebsiteManagement.Api.Models.Input
 {
-    public abstract class WebsiteManipulation
+    public abstract class WebsiteManipulationRequest
     {
         public string Name { get; set; }
 

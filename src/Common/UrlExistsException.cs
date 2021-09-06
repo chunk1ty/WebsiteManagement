@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebsiteManagement.Application.Common
+namespace WebsiteManagement.Common
 {
     public class UrlExistsException : Exception
     {

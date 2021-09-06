@@ -11,7 +11,7 @@ namespace WebsiteManagement.Infrastructure.Identity
 {
     public class AuthenticationService : IAuthenticationService
     {
-        public UserOutputModel Authenticate(string username, string password)
+        public LoginResponse Authenticate(string username, string password)
         {
             var user = IdentityInMemoryDbContext.Instance.Users.SingleOrDefault(u => u.Name == username &&
                                                                                      u.Password == password);
@@ -20,7 +20,7 @@ namespace WebsiteManagement.Infrastructure.Identity
                 return null;
             }
 
-            return new UserOutputModel(user.Id, user.Name, user.Password, GenerateJwtToken(user));
+            return new LoginResponse(user.Id, user.Name, user.Password, GenerateJwtToken(user));
         }
 
         private string GenerateJwtToken(User user)

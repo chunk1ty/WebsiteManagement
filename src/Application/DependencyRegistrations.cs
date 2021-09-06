@@ -6,6 +6,7 @@ using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Common.Behaviours;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Commands.CreateWebsite;
+using WebsiteManagement.Common;
 
 namespace WebsiteManagement.Application
 {
@@ -28,7 +29,7 @@ namespace WebsiteManagement.Application
         private static void AddCreateWebsiteRegistrations(this IServiceCollection services)
         {
             services.AddSingleton<IValidator<CreateWebsite>, CreateWebsiteValidator>();
-            services.AddScoped<IPipelineBehavior<CreateWebsite, OperationResult<WebsiteOutputModel>>, ValidationBehavior<CreateWebsite, OperationResult<WebsiteOutputModel>>>();
+            services.AddScoped<IPipelineBehavior<CreateWebsite, OperationResult<GetWebsiteResponse>>, ValidationBehavior<CreateWebsite, OperationResult<GetWebsiteResponse>>>();
         }
     }
 }

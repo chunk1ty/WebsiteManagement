@@ -1,8 +1,8 @@
 ﻿namespace WebsiteManagement.Application.Identity.Queries.GetUser
 {
-    public class UserOutputModel
+    public class LoginResponse
     {
-        public UserOutputModel(int id, string username, string password, string token)
+        public LoginResponse(int id, string username, string password, string token)
         {
             Id = id;
             Username = username;
@@ -14,8 +14,8 @@
 
         public string Username { get; }
 
-        public string Password { get;  }
+        public string Password { get; }
 
-        public string Token { get;  }
+        public string Token { get; }
     }
 }

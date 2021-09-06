@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using MediatR;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.Websites.Queries.GetWebsite
 {
-    public sealed class GetWebsite : IRequest<OperationResult<WebsiteOutputModel>>
+    public sealed class GetWebsiteRequest : IRequest<OperationResult<GetWebsiteResponse>>
     {
-        public GetWebsite(Guid websiteId)
+        public GetWebsiteRequest(Guid websiteId)
         {
             WebsiteId = websiteId;
         }
@@ -19,7 +20,7 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsite
         public Guid WebsiteId { get; }
     }
 
-    public class GetWebsiteHandler : IRequestHandler<GetWebsite, OperationResult<WebsiteOutputModel>>
+    public class GetWebsiteHandler : IRequestHandler<GetWebsiteRequest, OperationResult<GetWebsiteResponse>>
     {
         private readonly IWebsiteRepository _repository;
         private readonly ICypher _cypher;
@@ -30,15 +31,15 @@ namespace WebsiteManagement.Application.Websites.Queries.GetWebsite
             _cypher = cypher;
         }
 
-        public async Task<OperationResult<WebsiteOutputModel>> Handle(GetWebsite request, CancellationToken cancellationToken)
+        public async Task<OperationResult<GetWebsiteResponse>> Handle(GetWebsiteRequest request, CancellationToken cancellationToken)
         {
             Website website = await _repository.GetByIdAsync(request.WebsiteId);
             if (website is null)
             {
-                return OperationResult<WebsiteOutputModel>.Failure(new Dictionary<string, string> { { "WebsiteId", ErrorMessages.WebsiteNotFound } });
+                return OperationResult<GetWebsiteResponse>.Failure(new Dictionary<string, string> { { "WebsiteId", ErrorMessages.WebsiteNotFound } });
             }
 
-            return OperationResult<WebsiteOutputModel>.Success(website.ToWebsiteOutputModel(_cypher.Decrypt(website.Password)));
+            return OperationResult<GetWebsiteResponse>.Success(website.ToWebsiteOutputModel(_cypher.Decrypt(website.Password)));
         }
     }
 }

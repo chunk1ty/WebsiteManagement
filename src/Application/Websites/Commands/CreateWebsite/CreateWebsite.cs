@@ -5,11 +5,12 @@ using MediatR;
 using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites.Commands.Abstract;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
 {
-    public class CreateWebsite : WebsiteManipulation, IRequest<OperationResult<WebsiteOutputModel>>
+    public class CreateWebsite : WebsiteManipulation, IRequest<OperationResult<GetWebsiteResponse>>
     {
         public CreateWebsite(string name,
                              string url,
@@ -22,7 +23,7 @@ namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
         }
     }
 
-    public class CreateWebsiteHandler : IRequestHandler<CreateWebsite, OperationResult<WebsiteOutputModel>>
+    public class CreateWebsiteHandler : IRequestHandler<CreateWebsite, OperationResult<GetWebsiteResponse>>
     {
         private readonly IWebsiteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -35,7 +36,7 @@ namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
             _cypher = cypher;
         }
 
-        public async Task<OperationResult<WebsiteOutputModel>> Handle(CreateWebsite request, CancellationToken cancellationToken)
+        public async Task<OperationResult<GetWebsiteResponse>> Handle(CreateWebsite request, CancellationToken cancellationToken)
         {
             var passwordAsPlainText = request.Password;
 
@@ -49,10 +50,10 @@ namespace WebsiteManagement.Application.Websites.Commands.CreateWebsite
             }
             catch (UrlExistsException)
             {
-                return OperationResult<WebsiteOutputModel>.Failure(new Dictionary<string, string> { { "Url", "Url already exists." } });
+                return OperationResult<GetWebsiteResponse>.Failure(new Dictionary<string, string> { { "Url", "Url already exists." } });
             }
 
-            return OperationResult<WebsiteOutputModel>.Success(website.ToWebsiteOutputModel(passwordAsPlainText));
+            return OperationResult<GetWebsiteResponse>.Success(website.ToWebsiteOutputModel(passwordAsPlainText));
         }
     }
 }

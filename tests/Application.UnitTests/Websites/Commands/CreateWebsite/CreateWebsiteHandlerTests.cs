@@ -10,6 +10,7 @@ using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Commands.Abstract;
 using WebsiteManagement.Application.Websites.Commands.CreateWebsite;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsite
@@ -38,12 +39,12 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
 
             // Act
             var request = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1,cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[1]), "ank@ank.bg", "123456");
-            OperationResult<WebsiteOutputModel> createWebsiteOperation = await handler.Handle(request, CancellationToken.None);
+            OperationResult<GetWebsiteResponse> createWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
             _unitOfWorkMock.Verify(x => x.CommitAsync(CancellationToken.None), Times.Once);
 
-            createWebsiteOperation.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            createWebsiteOperation.Should().BeOfType(typeof(OperationResult<GetWebsiteResponse>));
             createWebsiteOperation.IsSuccessful.Should().BeFalse();
             createWebsiteOperation.Errors.Count.Should().Be(1);
             createWebsiteOperation.Errors.First().Key.Should().Be("Url");
@@ -58,13 +59,13 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
 
             // Act
             var request = new Application.Websites.Commands.CreateWebsite.CreateWebsite("mySite", "www.mysite.com", new List<string> { "cat1", "cat2" }, new ImageManipulation("myImage.png", "image/png", new byte[1]), "ank@ank.bg", "123456");
-            OperationResult<WebsiteOutputModel> createWebsiteOperation = await handler.Handle(request, CancellationToken.None);
+            OperationResult<GetWebsiteResponse> createWebsiteOperation = await handler.Handle(request, CancellationToken.None);
 
             // Assert
             _unitOfWorkMock.Verify(x => x.CommitAsync(CancellationToken.None), Times.Once);
             _repositoryMock.Verify(x => x.Add(It.IsAny<Website>()), Times.Once);
 
-            createWebsiteOperation.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            createWebsiteOperation.Should().BeOfType(typeof(OperationResult<GetWebsiteResponse>));
             createWebsiteOperation.IsSuccessful.Should().BeTrue();
             createWebsiteOperation.Errors.Should().BeNull();
 

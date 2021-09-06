@@ -6,9 +6,9 @@ namespace WebsiteManagement.Application.Common
 {
     public static class WebsiteExtensions
     {
-        public static WebsiteOutputModel ToWebsiteOutputModel(this Website website, string decryptedPassword)
+        public static GetWebsiteResponse ToWebsiteOutputModel(this Website website, string decryptedPassword)
         {
-            return new WebsiteOutputModel(website.Id,
+            return new GetWebsiteResponse(website.Id,
                                           website.Name,
                                           website.Url,
                                           website.Categories.Select(x => x.Value).ToList(),

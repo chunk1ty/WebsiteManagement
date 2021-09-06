@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WebsiteManagement.Application.Common
+namespace WebsiteManagement.Common
 {
     public class OperationResult<TResult>
     {

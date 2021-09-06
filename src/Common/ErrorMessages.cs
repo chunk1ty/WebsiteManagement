@@ -1,4 +1,4 @@
-﻿namespace WebsiteManagement.Application.Common
+﻿namespace WebsiteManagement.Common
 {
     public class ErrorMessages
     {

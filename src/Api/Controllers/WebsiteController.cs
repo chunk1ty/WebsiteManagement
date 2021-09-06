@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebsiteManagement.Api.Models.Input;
-using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Commands.DeleteWebsite;
 using WebsiteManagement.Application.Websites.Queries.GetWebsite;
 using WebsiteManagement.Application.Websites.Queries.GetWebsites;
+using WebsiteManagement.Common;
 
 namespace WebsiteManagement.Api.Controllers
 {
@@ -18,12 +18,12 @@ namespace WebsiteManagement.Api.Controllers
     {
         [HttpGet]
         [HttpHead]
-        public async Task<ActionResult<List<WebsiteOutputModel>>> GetWebsites([FromQuery] GetWebsites getWebsites)
+        public async Task<ActionResult<List<GetWebsiteResponse>>> GetWebsites([FromQuery] GetWebsitesRequest getWebsitesRequest)
         {
-            OperationResult<List<WebsiteOutputModel>> getWebsitesOperation = await Mediator.Send(getWebsites);
+            OperationResult<List<GetWebsiteResponse>> getWebsitesOperation = await Mediator.Send(getWebsitesRequest);
             if (getWebsitesOperation.IsSuccessful)
             {
-                getWebsitesOperation.Result.ForEach(x => x.Image.DownloadLink = Url.Link("GetImage", new { websiteId = x.Id }));
+                getWebsitesOperation.Result.ForEach(x => x.Image.DownloadLink = Url.Link("GetImageRequest", new { websiteId = x.Id }));
 
                 return Ok(getWebsitesOperation.Result);
             }
@@ -31,13 +31,13 @@ namespace WebsiteManagement.Api.Controllers
             return Errors(getWebsitesOperation.Errors);
         }
 
-        [HttpGet("{websiteId}", Name = "GetWebsite")]
-        public async Task<ActionResult<WebsiteOutputModel>> GetWebsite([FromRoute]Guid websiteId)
+        [HttpGet("{websiteId}", Name = "GetWebsiteRequest")]
+        public async Task<ActionResult<GetWebsiteResponse>> GetWebsite([FromRoute]Guid websiteId)
         {
-            OperationResult<WebsiteOutputModel> getWebsiteOperation = await Mediator.Send(new GetWebsite(websiteId));
+            OperationResult<GetWebsiteResponse> getWebsiteOperation = await Mediator.Send(new GetWebsiteRequest(websiteId));
             if (getWebsiteOperation.IsSuccessful)
             {
-                getWebsiteOperation.Result.Image.DownloadLink = Url.Link("GetImage", new { websiteId = getWebsiteOperation.Result.Id });
+                getWebsiteOperation.Result.Image.DownloadLink = Url.Link("GetImageRequest", new { websiteId = getWebsiteOperation.Result.Id });
                 return Ok(getWebsiteOperation.Result);
             }
 
@@ -45,20 +45,20 @@ namespace WebsiteManagement.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WebsiteOutputModel>> CreateWebsite([FromForm]CreateWebsiteInputModel createWebsiteInputModel)
+        public async Task<ActionResult<GetWebsiteResponse>> CreateWebsite([FromForm]CreateWebsiteRequest createWebsiteRequest)
         {
-            OperationResult<WebsiteOutputModel> createWebsiteOperation = await Mediator.Send(createWebsiteInputModel.ToCreateWebsite());
+            OperationResult<GetWebsiteResponse> createWebsiteOperation = await Mediator.Send(createWebsiteRequest.ToCreateWebsite());
             if (createWebsiteOperation.IsSuccessful)
             {
-                createWebsiteOperation.Result.Image.DownloadLink = Url.Link("GetImage", new { websiteId = createWebsiteOperation.Result.Id });
-                return CreatedAtRoute("GetWebsite", new { websiteId = createWebsiteOperation.Result.Id }, createWebsiteOperation.Result);
+                createWebsiteOperation.Result.Image.DownloadLink = Url.Link("GetImageRequest", new { websiteId = createWebsiteOperation.Result.Id });
+                return CreatedAtRoute("GetWebsiteRequest", new { websiteId = createWebsiteOperation.Result.Id }, createWebsiteOperation.Result);
             }
 
             return Errors(createWebsiteOperation.Errors);
         }
 
         [HttpPut("{websiteId}")]
-        public async Task<ActionResult> UpdateWebsite([FromRoute]Guid websiteId, [FromForm]UpdateWebsiteInputModel updateWebsite)
+        public async Task<ActionResult> UpdateWebsite([FromRoute]Guid websiteId, [FromForm]UpdateWebsiteRequest updateWebsite)
         {
             OperationResult<bool> updateWebsiteOperation = await Mediator.Send(updateWebsite.ToUpdateWebsite(websiteId));
             if (updateWebsiteOperation.IsSuccessful)

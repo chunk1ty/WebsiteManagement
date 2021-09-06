@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace WebsiteManagement.Application.Websites.Queries.GetWebsites
 {
-    public class GetWebsitesValidator : AbstractValidator<GetWebsites>
+    public class GetWebsitesValidator : AbstractValidator<GetWebsitesRequest>
     {
         private static readonly List<string> Properties = new List<string> { "Name", "Url", "Email" };
         private static readonly List<string> Orders = new List<string> { string.Empty, "asc", "desc" };

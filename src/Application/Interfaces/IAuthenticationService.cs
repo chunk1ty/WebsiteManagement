@@ -4,6 +4,6 @@ namespace WebsiteManagement.Application.Interfaces
 {
     public interface IAuthenticationService
     {
-        UserOutputModel Authenticate(string username, string password);
+        LoginResponse Authenticate(string username, string password);
     }
 }

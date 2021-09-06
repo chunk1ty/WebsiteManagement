@@ -10,6 +10,7 @@ using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Queries.GetWebsite;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsite
@@ -36,11 +37,11 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsite
             var handler = new GetWebsiteHandler(_repositoryMock.Object, _cyhperMock.Object);
 
             // Act
-            var query = new Application.Websites.Queries.GetWebsite.GetWebsite(Guid.Empty);
-            OperationResult<WebsiteOutputModel> operationResult = await handler.Handle(query, CancellationToken.None);
+            var query = new Application.Websites.Queries.GetWebsite.GetWebsiteRequest(Guid.Empty);
+            OperationResult<GetWebsiteResponse> operationResult = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            operationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            operationResult.Should().BeOfType(typeof(OperationResult<GetWebsiteResponse>));
             operationResult.IsSuccessful.Should().BeFalse();
             operationResult.Errors.First().Key.Should().Be("WebsiteId");
             operationResult.Errors.First().Value.Should().Be(ErrorMessages.WebsiteNotFound);
@@ -68,11 +69,11 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsite
             var handler = new GetWebsiteHandler(_repositoryMock.Object, _cyhperMock.Object);
 
             // Act
-            var query = new Application.Websites.Queries.GetWebsite.GetWebsite(Guid.Empty);
-            OperationResult<WebsiteOutputModel> operationResult = await handler.Handle(query, CancellationToken.None);
+            var query = new Application.Websites.Queries.GetWebsite.GetWebsiteRequest(Guid.Empty);
+            OperationResult<GetWebsiteResponse> operationResult = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            operationResult.Should().BeOfType(typeof(OperationResult<WebsiteOutputModel>));
+            operationResult.Should().BeOfType(typeof(OperationResult<GetWebsiteResponse>));
             operationResult.IsSuccessful.Should().BeTrue();
         }
     }

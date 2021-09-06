@@ -8,6 +8,7 @@ using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Queries.GetWebsites;
+using WebsiteManagement.Common;
 using WebsiteManagement.Domain;
 
 namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
@@ -35,12 +36,12 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Queries.GetWebsites
             var handler = new GetWebsitesHandler(_repositoryMock.Object, _cypherMock.Object);
 
             // Act
-            var query = new Application.Websites.Queries.GetWebsites.GetWebsites { PageNumber = 1, PageSize = 10, OrderBy = "name desc" };
+            var query = new Application.Websites.Queries.GetWebsites.GetWebsitesRequest { PageNumber = 1, PageSize = 10, OrderBy = "name desc" };
 
-            OperationResult<List<WebsiteOutputModel>> operationResult = await handler.Handle(query, CancellationToken.None);
+            OperationResult<List<GetWebsiteResponse>> operationResult = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            operationResult.Should().BeOfType(typeof(OperationResult<List<WebsiteOutputModel>>));
+            operationResult.Should().BeOfType(typeof(OperationResult<List<GetWebsiteResponse>>));
             operationResult.IsSuccessful.Should().BeTrue();
             operationResult.Result.Should().NotBeNull();
 

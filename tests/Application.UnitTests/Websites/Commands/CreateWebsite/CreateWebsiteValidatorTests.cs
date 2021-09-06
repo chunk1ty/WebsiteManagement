@@ -10,18 +10,19 @@ using WebsiteManagement.Application.Common.Behaviours;
 using WebsiteManagement.Application.Websites;
 using WebsiteManagement.Application.Websites.Commands.Abstract;
 using WebsiteManagement.Application.Websites.Commands.CreateWebsite;
+using WebsiteManagement.Common;
 
 namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsite
 {
     [TestFixture]
     public class CreateWebsiteValidatorTests
     {
-        private ValidationBehavior<Application.Websites.Commands.CreateWebsite.CreateWebsite, OperationResult<WebsiteOutputModel>> _validator;
+        private ValidationBehavior<Application.Websites.Commands.CreateWebsite.CreateWebsite, OperationResult<GetWebsiteResponse>> _validator;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new ValidationBehavior<Application.Websites.Commands.CreateWebsite.CreateWebsite, OperationResult<WebsiteOutputModel>>(new CreateWebsiteValidator());
+            _validator = new ValidationBehavior<Application.Websites.Commands.CreateWebsite.CreateWebsite, OperationResult<GetWebsiteResponse>>(new CreateWebsiteValidator());
         }
 
         [Test]
@@ -97,7 +98,7 @@ namespace WebsiteManagement.Application.UnitTests.Websites.Commands.CreateWebsit
             // Act
             var command = new Application.Websites.Commands.CreateWebsite.CreateWebsite("aaaa", "www.mysite.com", new List<string> { "cat1,cat2" }, new ImageManipulation("$myImage.png", "image/png", new byte[1]), "ank@ank.bg", "123456");
 
-            RequestHandlerDelegate<OperationResult<WebsiteOutputModel>> requestHandlerDelegate = () => Task.FromResult(OperationResult<WebsiteOutputModel>.Success(null));
+            RequestHandlerDelegate<OperationResult<GetWebsiteResponse>> requestHandlerDelegate = () => Task.FromResult(OperationResult<GetWebsiteResponse>.Success(null));
 
             var validationResult = await _validator.Handle(command, CancellationToken.None, requestHandlerDelegate);
 

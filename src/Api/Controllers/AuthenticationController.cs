@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebsiteManagement.Application.Common;
 using WebsiteManagement.Application.Identity.Queries.GetUser;
+using WebsiteManagement.Common;
 
 namespace WebsiteManagement.Api.Controllers
 {
@@ -10,9 +10,9 @@ namespace WebsiteManagement.Api.Controllers
     public class AuthenticationController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<UserOutputModel>> Login([FromBody]GetUser model)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody]LoginRequest model)
         {
-            OperationResult<UserOutputModel> authenticationOperation = await Mediator.Send(model);
+            OperationResult<LoginResponse> authenticationOperation = await Mediator.Send(model);
             if (authenticationOperation.IsSuccessful)
             {
                 return Ok(authenticationOperation.Result);
