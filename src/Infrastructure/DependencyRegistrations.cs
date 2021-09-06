@@ -11,7 +11,8 @@ namespace WebsiteManagement.Infrastructure
     {
         public static void AddInfrastructure(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<WebsiteManagementDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
+            // services.AddDbContext<WebsiteManagementDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
+            services.AddDbContext<WebsiteManagementDbContext>(options => options.UseInMemoryDatabase("WebsiteManagementDbContext"), ServiceLifetime.Scoped);
             services.AddScoped<IUnitOfWork>(provider => provider.GetService<WebsiteManagementDbContext>());
             services.AddScoped<IWebsiteRepository, WebsiteRepository>();
 

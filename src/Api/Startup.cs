@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using WebsiteManagement.Application;
 using WebsiteManagement.Application.Interfaces;
 using WebsiteManagement.Infrastructure;
@@ -47,6 +49,8 @@ namespace WebsiteManagement.Api
                 };
             });
 
+            services.AddSwaggerGen();
+
             services.AddInfrastructure(Configuration.GetValue<string>("ConnectionStrings:DatabaseConnection"));
             services.AddApplication();
 
@@ -55,6 +59,12 @@ namespace WebsiteManagement.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Website Management Api");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

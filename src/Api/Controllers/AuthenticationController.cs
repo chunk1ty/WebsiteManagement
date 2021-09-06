@@ -7,7 +7,7 @@ namespace WebsiteManagement.Api.Controllers
 {
     [ApiController]
     [Route("api/login")]
-    public class AuthenticationController : ApiController
+    public class AuthenticationController : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<UserOutputModel>> Login([FromBody]GetUser model)

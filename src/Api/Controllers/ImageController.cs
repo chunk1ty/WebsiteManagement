@@ -9,7 +9,7 @@ namespace WebsiteManagement.Api.Controllers
     // [Authorize]
     [ApiController]
     [Route("api/websites/{websiteId}/image")]
-    public class ImageController : ApiController
+    public class ImageController : BaseApiController
     {
         [HttpGet(Name = "GetImage")]
         public async Task<ActionResult> GetImage(Guid websiteId)

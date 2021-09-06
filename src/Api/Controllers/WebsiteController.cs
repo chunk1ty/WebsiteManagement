@@ -14,7 +14,7 @@ namespace WebsiteManagement.Api.Controllers
     // [Authorize]
     [ApiController]
     [Route("api/websites")]
-    public class WebsiteController : ApiController
+    public class WebsiteController : BaseApiController
     {
         [HttpGet]
         [HttpHead]

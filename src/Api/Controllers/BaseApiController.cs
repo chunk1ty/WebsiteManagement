@@ -10,13 +10,13 @@ using WebsiteManagement.Application.Common;
 namespace WebsiteManagement.Api.Controllers
 {
     [ApiController]
-    public abstract class ApiController : ControllerBase
+    public abstract class BaseApiController : ControllerBase
     {
         private IMediator _mediator;
 
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
-        public ActionResult Errors(Dictionary<string, string> errors)
+        protected ActionResult Errors(Dictionary<string, string> errors)
         {
             foreach (var error in errors)
             {
